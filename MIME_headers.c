@@ -1616,7 +1616,6 @@ int MIMEH_parse_header_parameter( struct MIMEH_header_info *hinfo,  char *data, 
 	int return_value = 0;
 	char *p;
 	char *hl;
-	int offset = 0;
 
 	// Set the data end point to be the beginning of the data, as we
 	//		have not yet searched through any of the header data
@@ -1632,8 +1631,6 @@ int MIMEH_parse_header_parameter( struct MIMEH_header_info *hinfo,  char *data, 
 
 	// Look for the search string we're after (ie, filename, name, location etc)
 	if (strncmp(hl,searchstr,strlen(searchstr))==0) p = hl; else p = NULL;
-	// try to catch strings enclosed in " , like "filename"=foobar.txt
-	if ((p==NULL)&&(*hl=='"')&&(strncmp(hl+1,searchstr,strlen(searchstr))==0)) {p = hl+1; offset = 2;} else p = NULL;
 	//	p = strstr (hl, searchstr); //TESTING 
 	if (p != NULL)
 	{
@@ -1649,7 +1646,7 @@ int MIMEH_parse_header_parameter( struct MIMEH_header_info *hinfo,  char *data, 
 		//		searched for.  At this position, we should see a separator of
 		//		some type in the set [*;:=\t ].
 
-		string = p -hl +data +strlen(searchstr) + offset;
+		string = p -hl +data +strlen(searchstr);
 
 		/**
 		 ** After searching for our parameter, if we've got a
